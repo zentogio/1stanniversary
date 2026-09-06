@@ -19,7 +19,7 @@
   const PLAYLIST = [
     { title: "LNGSHOT — Moonwalkin'", src: 'anniversayry/music/01.mp3' },
     { title: 'Dept - Hoo Hoo', src: 'anniversayry/music/02.mp3' },
-    { title: 'Tattoo Colour', src: 'anniversayry/music/03.mp3' },
+    { title: 'Tattoo Colour — รักแรกพบ', src: 'anniversayry/music/03.mp3' },
     { title: 'Lee Hi — ONLY', src: 'anniversayry/music/04.mp3' },
     { title: 'Kehlani — Folded', src: 'anniversayry/music/05.mp3' },
     { title: 'No One Else — Spicydisc', src: 'anniversayry/music/06.mp3' },
