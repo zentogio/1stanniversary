@@ -1,0 +1,12 @@
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Incomplete browser downloads
+*.crdownload
+
+# Local dev-server config, if one ever gets added here
+.claude/
+
+# Just in case
+node_modules/

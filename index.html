@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOVE AIRLINE — ครบรอบ 1 ปี</title>
+<link rel="icon" type="image/png" href="anniversayry/favicon.png">
+<link rel="apple-touch-icon" href="anniversayry/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Space+Mono:wght@400;700&family=Work+Sans:wght@300;400;500&family=Itim&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- Background stage: a blurred static photo shows first, crossfading into the shared video layer (states 1,2,5,6) once the journey begins -->
+  <div id="bg-stage" aria-hidden="true">
+    <img id="bg-photo" src="anniversayry/shutterstock_758602234-min-scaled-e1641297696653.avif" alt="">
+    <div id="bg-layer">
+      <video id="bg-video" muted playsinline preload="auto"></video>
+      <div id="bg-scrim"></div>
+    </div>
+  </div>
+
+  <!-- Background music — starts on the CTA press (a real user gesture), loops through the whole site -->
+  <audio id="bg-music" src="anniversayry/music.mp3" loop preload="auto"></audio>
+  <button id="mute-btn" class="icon-btn" aria-label="เปิด/ปิดเสียงเพลง">
+    <svg class="icon-sound-on" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 9v6h4l5 4V5L8 9H4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M16.5 9a4 4 0 0 1 0 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M19 6.5a8 8 0 0 1 0 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+    <svg class="icon-sound-off" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 9v6h4l5 4V5L8 9H4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M16 9l5 6M21 9l-5 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+  </button>
+
+  <!-- STATE 1 / 2 — Boarding pass hero -->
+  <section id="screen-hero" class="screen active">
+    <div class="brand-logo" id="brand-logo">
+      <img src="anniversayry/logo.png" alt="LOVE AIRLINE — Happy 1 Year Anniversary Flight">
+    </div>
+
+    <div class="ticket" id="ticket">
+
+      <!-- Main coupon -->
+      <div class="ticket-panel ticket-panel-main">
+        <div class="ticket-header">
+          <div class="ticket-header-left">
+            <svg class="header-plane" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2.5 1.5V22l4-1 4 1v-1.5L13 19v-5.5l8 2.5z"/>
+            </svg>
+            <span>BOARDING PASS</span>
+          </div>
+          <span class="ticket-header-right">LOVE AIRLINE</span>
+        </div>
+
+        <div class="ticket-panel-body">
+          <div class="ticket-passenger">
+            <span class="label">PASSENGER</span>
+            <span class="passenger-hint">Khwanmarine Glingumnerd</span>
+          </div>
+
+          <div class="ticket-fields ticket-fields-top">
+            <div><span class="label">FLIGHT</span><span class="value">LA0709</span></div>
+            <div><span class="label">DATE</span><span class="value">07.09.2026</span></div>
+            <div><span class="label">SEAT</span><span class="value">7KP</span></div>
+            <div><span class="label">CLASS</span><span class="value">FIRST</span></div>
+          </div>
+
+          <div class="ticket-route">
+            <span class="route-city">DAY ONE</span>
+            <svg class="route-plane" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2.5 1.5V22l4-1 4 1v-1.5L13 19v-5.5l8 2.5z"/>
+            </svg>
+            <span class="route-city">FOREVER</span>
+          </div>
+
+          <div class="ticket-fields ticket-fields-bottom">
+            <div><span class="label accent">GATE</span><span class="value">LOVE</span></div>
+            <div><span class="label accent">BOARDING TIME</span><span class="value">1201A</span></div>
+            <div><span class="label accent">ARRIVAL</span><span class="value">FOREVER</span></div>
+          </div>
+        </div>
+
+        <div class="ticket-footer">
+          <div class="ticket-barcode-h" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <!-- Tear line — drag the handle to tear the ticket and start the journey -->
+      <div class="ticket-tear" id="ticket-tear">
+        <div class="tear-handle" id="tear-handle" role="button" aria-label="ลากเพื่อฉีกตั๋วและเริ่มการเดินทาง">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="6" cy="6" r="2.6" stroke="currentColor" stroke-width="1.7"/>
+            <circle cx="6" cy="18" r="2.6" stroke="currentColor" stroke-width="1.7"/>
+            <line x1="19.5" y1="4.5" x2="8.5" y2="15.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            <line x1="13.8" y1="14" x2="19.5" y2="19.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            <line x1="8.5" y1="8.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Stub -->
+      <div class="ticket-panel ticket-panel-stub">
+        <div class="ticket-header">
+          <span>BOARDING PASS</span>
+        </div>
+
+        <div class="ticket-panel-body">
+          <div class="stub-names">
+            <span class="passenger-hint">Khwanmarine Glingumnerd</span>
+          </div>
+
+          <div class="stub-route">
+            <span class="value">FROM: DAY ONE</span>
+            <span class="value">TO: FOREVER</span>
+          </div>
+
+          <div class="ticket-fields ticket-fields-stub">
+            <div><span class="label">SEAT NO.</span><span class="value">7KP</span></div>
+            <div><span class="label">BOARDING TIME</span><span class="value">1201A</span></div>
+          </div>
+        </div>
+
+        <div class="ticket-footer">
+          <div class="ticket-barcode-v" aria-hidden="true"></div>
+          <span class="stub-code">LA0709</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- STATE 3 / 4 — Memory timeline -->
+  <section id="screen-memory" class="screen hidden">
+    <div class="memory-carousel">
+      <button id="back-btn" class="memory-arrow prev" disabled aria-label="ย้อนกลับ">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <div class="memory-viewport">
+        <div class="memory-track" id="memory-track"></div>
+      </div>
+
+      <button id="next-btn" class="memory-arrow next" aria-label="ต่อไป">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Click the centered memory card to open this — one sheet per timeline entry -->
+    <div class="memory-detail" id="memory-detail">
+      <div class="memory-detail-backdrop" id="memory-detail-backdrop"></div>
+      <div class="memory-detail-sheet">
+        <button class="memory-detail-close" id="memory-detail-close" aria-label="ปิด">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <span class="memory-date" id="detail-date">[วว.ดด.ปปปป]</span>
+        <p class="memory-detail-text" id="detail-text">[เรื่องราวของความทรงจำนี้]</p>
+      </div>
+    </div>
+
+    <!-- Confirmation before committing to landing — fires when Next is pressed on the final memory -->
+    <div class="landing-confirm" id="landing-confirm">
+      <div class="landing-confirm-backdrop" id="landing-confirm-backdrop"></div>
+      <div class="landing-confirm-card">
+        <p class="landing-confirm-text">พร้อมลงจอดหรือยัง?</p>
+        <div class="landing-confirm-actions">
+          <button class="confirm-btn ghost" id="landing-cancel">ยกเลิก</button>
+          <button class="confirm-btn primary" id="landing-ready">พร้อมแล้ว</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATE 6 — Letter -->
+  <section id="screen-letter" class="screen hidden">
+    <!-- Rows are populated in JS with just enough tiles to cover the actual screen width twice over,
+         so the seamless loop never runs out of content on wide viewports (see buildPhotoRows). -->
+    <div class="letter-photos" id="letter-photos" aria-hidden="true">
+      <div class="photo-row row-left"></div>
+      <div class="photo-row row-right"></div>
+      <div class="photo-row row-left"></div>
+      <div class="photo-row row-right"></div>
+    </div>
+
+    <div class="letter-envelope" id="letter-envelope">
+      <img src="anniversayry/postcard-removebg-preview.png" alt="ซองจดหมาย LOVE AIRLINE ถึง Khwanmarine Glingumnerd">
+    </div>
+
+    <div class="letter" id="letter">
+      <div class="letter-stripes" aria-hidden="true"></div>
+      <div class="letter-body">
+        <span class="letter-kicker">LOVE AIRLINE &middot; ARRIVED</span>
+        <p class="letter-salutation">DEAR : Khwanmarine Glingumnerd</p>
+        <p class="letter-text">Happy 1st anniversary นะค้าบบบ นางสาวขวัญมารีน กลิ่นกำเหนิด ครบหนึ่งปีเเร้วว เเต่เหมือนคบกันมาหลายปีเรยว่ะ ขวัญค้าบ กูขอบคุณนะที่ยังมีมึงอยู่ข้างข้างมาตลอดเลย แล้วกูก็อยากอยู่กับมึงไปเรื่อยเรื่อย ถึงมันจะดูเอาแต่ใจ อยากให้อยู่เที่ยวไปด้วยกัน ด่ากัน ตีกัน ไปเรื่อยเรื่อยว่ะ มึงเข้ามาเป็นสีสันในชีวิตกูมากเลย มึงเป็นคนพิเศษอ่ะคนอะไรวะแค่รู้จักชื่อก็สนใจแล้วอะ คนอะไรวะแม่งโคตรมีเสน่ห์เลย คนอะไรวะตอนยิ้มแม่งโคตรน่ารักเลย อยู่ด้วยเเล้วโครตสบายใจ กูอยากผ่านทุกช่วงเวลากับมึงเลยว่ะ กูอยากรู้ว่าอนาคตเราอยู่ด้วยกันจะเป็นยังไงวะ ถึงมันจะดูเบียว เเต่กูคิดจริงนะเว้ย ขวัญสำหรับกูนะ มึงคือคนที่เก่งมาก ฉลาดมาก มึงทำให้กูอยากเก่งขึ้น มึงเหมือนเป็นเป้าหมายในชีวิตกูเลยกูขอบคุณจริงๆนะ หนึ่งปีที่ผ่านมากูโครตมีความสุขกับมึงเลย เเบบมันสบายใจที่อยู่ด้วยอะ เเต่ก็อยากจะขอโทษหลายๆเรื่องที่เเบบ กูคิดไม่มากพอแล้วทำให้มึงเสียใจกูขอโทษจริงๆ กูจะทำทุกอย่างให้เต็มที่สำหรับมึงนะ มึงสามารถ ระบายทุกเรื่องที่ไม่สบายใจกับกูได้เสมอ กูพร้อมรับฟังนะ กูอยู่ข้างๆมึงเสมอนั เเล้วก็ กูจะเป็น เซนโต้ คนที่เหี้ย กวนตีน ทะลึ่ง เเต่รักมึงสุดหัวใจตลอดไปนะ :)</p>
+        <p class="letter-sign">From : Me</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
