@@ -28,6 +28,7 @@
     { title: 'Sunkissed — URWORLD', src: 'anniversayry/music/09.mp3' },
     { title: 'Everyday — Patrickananda', src: 'anniversayry/music/10.mp3' },
     { title: 'Her — YENTED', src: 'anniversayry/music/11.mp3' },
+    { title: 'd.ear, Jaehyun — Try Again', src: 'anniversayry/music/12.mp3' },
   ];
 
   // Relationship timeline — one entry per gellery/<n> folder. `main` is the
