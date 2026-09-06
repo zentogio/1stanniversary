@@ -574,6 +574,15 @@
       layoutMemoryRing();
       renderMemory();
       screenMemory.classList.remove('hidden');
+
+      // One more pass after the screen has actually painted — covers mobile
+      // Safari re-laying out the page slightly after becoming visible
+      // (address bar settling, 3D compositing layer only fully establishing
+      // post-paint) rather than in the same tick it was unhidden.
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        layoutMemoryRing();
+        updateCarousel();
+      }));
     }, 900);
   }
 
@@ -586,6 +595,12 @@
     if (newIndex < 0 || newIndex >= TIMELINE.length || newIndex === currentIndex) return;
     currentIndex = newIndex;
     activateCardMedia(memoryTrack.children[newIndex]); // don't wait on the stagger if the visitor gets here first
+    // Mobile Safari's address bar only actually collapses on a real touch
+    // interaction, not just time passing — so the viewport (and the ring
+    // radius measured from it) may still be wrong even after the re-measure
+    // in showMemory(). This tap is exactly that interaction, so re-measure
+    // again here too.
+    layoutMemoryRing();
     renderMemory();
   }
 
