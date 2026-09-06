@@ -690,8 +690,8 @@ img, video {
   inset: 0;
   margin: auto;
   z-index: 1;
-  width: 94%;
-  height: 94%;
+  width: 80%;
+  height: 80%;
   border-radius: 8px;
   background: linear-gradient(150deg, var(--card) 0%, var(--sky-tint) 100%);
   display: flex;

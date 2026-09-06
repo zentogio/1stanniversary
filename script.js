@@ -332,6 +332,10 @@
 
     bgMusic.play().catch(() => { /* autoplay may need a user gesture on some browsers; this click satisfies that */ });
 
+    // The takeoff clip runs for a few seconds — plenty of time for the memory
+    // photos/clips to load in the background before they're actually shown.
+    buildMemoryCards();
+
     setTimeout(() => {
       screenHero.classList.add('hidden');
     }, 1000);
@@ -421,12 +425,21 @@
   const RING_ANGLE = 42; // degrees between adjacent cards
   let ringRadius = 0;
 
+  // Built lazily, right when the journey actually begins (ticket tear) —
+  // not at page load. Otherwise all 7 cards' photos and 6 video clips start
+  // downloading immediately behind the hero screen, competing for bandwidth
+  // on a slow connection before the visitor has even tapped anything.
+  let memoryCardsBuilt = false;
+
   function buildMemoryCards() {
+    if (memoryCardsBuilt) return;
+    memoryCardsBuilt = true;
+
     TIMELINE.forEach((entry) => {
       const n = entry.chips.length;
       const chipsHtml = entry.chips.map((chip, i) => {
         const { tx, ty, rot } = fanPosition(i, n);
-        return `<div class="fan-chip" style="--i:${i}; --tx:${tx}px; --ty:${ty}px; --rot:${rot}deg">${mediaTag(chip, 'fan-chip-media')}</div>`;
+        return `<div class="fan-chip" style="--i:${i}; --tx:${tx}px; --ty:${ty}px; --rot:${rot}deg">${mediaTag(chip, 'fan-chip-media', { autoplay: false })}</div>`;
       }).join('');
 
       const card = document.createElement('div');
@@ -434,7 +447,7 @@
       card.innerHTML = `
         <div class="memory-photo-wrap">
           <div class="photo-fan" aria-hidden="true">${chipsHtml}</div>
-          <div class="memory-photo">${mediaTag(entry.main, 'memory-photo-media')}</div>
+          <div class="memory-photo">${mediaTag(entry.main, 'memory-photo-media', { autoplay: false })}</div>
         </div>
         <div class="memory-caption">
           <span class="memory-date">${entry.date}</span>
@@ -491,6 +504,14 @@
       card.style.pointerEvents = dist <= 1 ? 'auto' : 'none';
       card.style.transform = card.dataset.baseTransform + extraScale;
       card.classList.toggle('fanned', dist === 0);
+
+      // Only the centered card's clips actually play — the rest sit paused
+      // on their first frame, so at most a couple of videos ever decode at
+      // once instead of all of them simultaneously.
+      card.querySelectorAll('video').forEach((v) => {
+        if (dist === 0) v.play().catch(() => {});
+        else v.pause();
+      });
     });
   }
 
@@ -680,6 +701,5 @@
 
   letterEnvelope.addEventListener('click', openLetter);
 
-  buildMemoryCards();
   initHero();
 })();
