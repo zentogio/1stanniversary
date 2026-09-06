@@ -464,6 +464,24 @@
     });
   }
 
+  // Measures the viewport and (re)sets every card's 3D resting transform.
+  // Called once right after the cards are built, and again right before the
+  // memory screen's first reveal — some mobile browsers (notably iOS
+  // Safari, whose address-bar/toolbar resizes the viewport as it collapses
+  // during scrolling) haven't settled on their final viewport size yet at
+  // build time, which was making the ring radius (and so every card's
+  // apparent 3D size) measure smaller than it should. Re-measuring right
+  // before the reveal — well after that settling — fixes it without
+  // depending on exactly when the resize happens.
+  function layoutMemoryRing() {
+    const stageWidth = memoryTrack.getBoundingClientRect().width;
+    ringRadius = Math.round(stageWidth * 0.70);
+    Array.from(memoryTrack.children).forEach((card, i) => {
+      card.dataset.baseTransform = `translate(-50%, -50%) rotateY(${i * RING_ANGLE}deg) translateZ(${ringRadius}px)`;
+      card.style.transform = card.dataset.baseTransform;
+    });
+  }
+
   function buildMemoryCards() {
     if (memoryCardsBuilt) return;
     memoryCardsBuilt = true;
@@ -490,14 +508,9 @@
       card.querySelectorAll('.fan-chip').forEach(watchChipAspect);
     });
 
-    // A wide radius (relative to the whole stage, not just the card) so the
-    // immediate neighbors land out near the screen edges instead of huddling close.
-    const stageWidth = memoryTrack.getBoundingClientRect().width;
-    ringRadius = Math.round(stageWidth * 0.70);
+    layoutMemoryRing();
 
     Array.from(memoryTrack.children).forEach((card, i) => {
-      card.dataset.baseTransform = `translate(-50%, -50%) rotateY(${i * RING_ANGLE}deg) translateZ(${ringRadius}px)`;
-      card.style.transform = card.dataset.baseTransform;
       card.addEventListener('click', () => {
         if (i === currentIndex) {
           openMemoryDetail(i);
@@ -558,6 +571,7 @@
 
     setTimeout(() => {
       currentIndex = 0;
+      layoutMemoryRing();
       renderMemory();
       screenMemory.classList.remove('hidden');
     }, 900);
