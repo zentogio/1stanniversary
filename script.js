@@ -29,6 +29,9 @@
     { title: 'Everyday — Patrickananda', src: 'anniversayry/music/10.mp3' },
     { title: 'Her — YENTED', src: 'anniversayry/music/11.mp3' },
     { title: 'd.ear, Jaehyun — Try Again', src: 'anniversayry/music/12.mp3' },
+    { title: 'Travis Scott ft. Kendrick Lamar — goosebumps', src: 'anniversayry/music/13.mp3' },
+    { title: 'Don Toliver ft. Travis Scott — You', src: 'anniversayry/music/14.mp3' },
+    { title: 'Travis Scott ft. Playboi Carti — FE!N', src: 'anniversayry/music/15.mp3' },
   ];
 
   // Relationship timeline — one entry per gellery/<n> folder. `main` is the
@@ -202,6 +205,9 @@
   const musicVolume = document.getElementById('music-volume');
   const musicPrevBtn = document.getElementById('music-prev');
   const musicNextBtn = document.getElementById('music-next');
+  const musicWidget = document.getElementById('music-widget');
+  const musicToggleBtn = document.getElementById('music-toggle');
+  const musicDropdown = document.getElementById('music-dropdown');
 
   const screenHero = document.getElementById('screen-hero');
   const brandLogo = document.getElementById('brand-logo');
@@ -234,19 +240,56 @@
   let currentClip = 'takeoff'; // 'takeoff' | 'landing' — tells the ended-handler what comes next
   let currentIndex = 0;
 
-  // ---- Background music playlist: prev/next arrows, a volume slider, and
-  // the current title — cycles forward automatically when a track ends. ----
+  // ---- Background music playlist: prev/next arrows, a volume slider, the
+  // current title, and a chevron that expands a dropdown to jump straight to
+  // any track — cycles forward automatically when a track ends. ----
   let currentTrack = 0;
+
+  PLAYLIST.forEach((track, i) => {
+    const item = document.createElement('button');
+    item.type = 'button';
+    item.className = 'music-dropdown-item';
+    item.textContent = track.title;
+    item.addEventListener('click', () => {
+      loadTrack(i, { autoplay: true });
+      closeMusicDropdown();
+    });
+    musicDropdown.appendChild(item);
+  });
+
+  function highlightTrack() {
+    Array.from(musicDropdown.children).forEach((item, i) => {
+      item.classList.toggle('active', i === currentTrack);
+    });
+  }
 
   function loadTrack(i, { autoplay }) {
     currentTrack = (i + PLAYLIST.length) % PLAYLIST.length;
     const track = PLAYLIST[currentTrack];
     bgMusic.src = track.src;
     musicTitle.textContent = track.title;
+    highlightTrack();
     if (autoplay) {
       bgMusic.play().catch(() => { /* needs a user gesture first — the tear/arrow click satisfies that */ });
     }
   }
+
+  function closeMusicDropdown() {
+    musicDropdown.classList.remove('open');
+    musicToggleBtn.classList.remove('open');
+    musicToggleBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  musicToggleBtn.addEventListener('click', () => {
+    const opening = !musicDropdown.classList.contains('open');
+    musicDropdown.classList.toggle('open', opening);
+    musicToggleBtn.classList.toggle('open', opening);
+    musicToggleBtn.setAttribute('aria-expanded', String(opening));
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!musicWidget.contains(e.target)) closeMusicDropdown();
+  });
 
   bgMusic.addEventListener('ended', () => loadTrack(currentTrack + 1, { autoplay: true }));
   musicPrevBtn.addEventListener('click', () => loadTrack(currentTrack - 1, { autoplay: true }));
