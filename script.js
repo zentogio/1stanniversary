@@ -17,12 +17,17 @@
   // Background music playlist — cycles to the next track when one ends,
   // wrapping back to the first after the last. See anniversayry/music/.
   const PLAYLIST = [
-    { title: 'No One Else — Spicydisc', src: 'anniversayry/music/01.mp3' },
-    { title: 'Honeymoon — Morvasu', src: 'anniversayry/music/02.mp3' },
-    { title: 'Extraordinary — ANATOMY RABBIT', src: 'anniversayry/music/03.mp3' },
-    { title: 'Sunkissed — URWORLD', src: 'anniversayry/music/04.mp3' },
-    { title: 'Everyday — Patrickananda', src: 'anniversayry/music/05.mp3' },
-    { title: 'Her — YENTED', src: 'anniversayry/music/06.mp3' },
+    { title: "LNGSHOT — Moonwalkin'", src: 'anniversayry/music/01.mp3' },
+    { title: 'Dept - Hoo Hoo', src: 'anniversayry/music/02.mp3' },
+    { title: 'Tattoo Colour', src: 'anniversayry/music/03.mp3' },
+    { title: 'Lee Hi — ONLY', src: 'anniversayry/music/04.mp3' },
+    { title: 'Kehlani — Folded', src: 'anniversayry/music/05.mp3' },
+    { title: 'No One Else — Spicydisc', src: 'anniversayry/music/06.mp3' },
+    { title: 'Honeymoon — Morvasu', src: 'anniversayry/music/07.mp3' },
+    { title: 'Extraordinary — ANATOMY RABBIT', src: 'anniversayry/music/08.mp3' },
+    { title: 'Sunkissed — URWORLD', src: 'anniversayry/music/09.mp3' },
+    { title: 'Everyday — Patrickananda', src: 'anniversayry/music/10.mp3' },
+    { title: 'Her — YENTED', src: 'anniversayry/music/11.mp3' },
   ];
 
   // Relationship timeline — one entry per gellery/<n> folder. `main` is the
