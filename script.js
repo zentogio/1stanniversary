@@ -186,12 +186,21 @@
     }
   }
 
-  function mediaTag(item, className, { autoplay = true } = {}) {
+  // `lazy: false` for the memory-card chips/main photo — those sit on cards
+  // that are 3D-rotated (rotateY/translateZ) out to the sides of the ring.
+  // Safari's loading="lazy" intersection check can get confused by that kind
+  // of transform and never actually trigger the load for the off-angle
+  // cards, leaving some photos permanently unloaded. The carousel is already
+  // built lazily as a whole (see buildMemoryCards), so per-image lazy
+  // loading isn't needed there anyway — only the flat, non-3D letter-scene
+  // photo strip still uses it.
+  function mediaTag(item, className, { autoplay = true, lazy = true } = {}) {
     if (item.type === 'video') {
       const autoAttr = autoplay ? 'autoplay' : '';
       return `<video class="${className}" src="${item.src}" muted loop playsinline preload="metadata" ${autoAttr}></video>`;
     }
-    return `<img class="${className}" src="${item.src}" alt="" loading="lazy" decoding="async">`;
+    const loadingAttr = lazy ? 'loading="lazy"' : '';
+    return `<img class="${className}" src="${item.src}" alt="" ${loadingAttr} decoding="async">`;
   }
 
   // ---------------------------------------------------------------------
@@ -431,6 +440,30 @@
   // on a slow connection before the visitor has even tapped anything.
   let memoryCardsBuilt = false;
 
+  // Card 0 gets to fetch its media immediately; the other six have their
+  // src swapped onto data-src so nothing about them hits the network yet,
+  // then get released a few hundred ms apart — so the very first card the
+  // visitor actually lands on isn't stuck competing for bandwidth with six
+  // others they can't even see yet.
+  function deferCardMedia(card) {
+    card.querySelectorAll('img, video').forEach((el) => {
+      const src = el.getAttribute('src');
+      if (!src) return;
+      el.dataset.deferredSrc = src;
+      el.removeAttribute('src');
+    });
+  }
+
+  function activateCardMedia(card) {
+    card.querySelectorAll('img, video').forEach((el) => {
+      const src = el.dataset.deferredSrc;
+      if (!src) return;
+      delete el.dataset.deferredSrc;
+      el.src = src;
+      if (el.tagName === 'VIDEO') el.load();
+    });
+  }
+
   function buildMemoryCards() {
     if (memoryCardsBuilt) return;
     memoryCardsBuilt = true;
@@ -439,7 +472,7 @@
       const n = entry.chips.length;
       const chipsHtml = entry.chips.map((chip, i) => {
         const { tx, ty, rot } = fanPosition(i, n);
-        return `<div class="fan-chip" style="--i:${i}; --tx:${tx}px; --ty:${ty}px; --rot:${rot}deg">${mediaTag(chip, 'fan-chip-media', { autoplay: false })}</div>`;
+        return `<div class="fan-chip" style="--i:${i}; --tx:${tx}px; --ty:${ty}px; --rot:${rot}deg">${mediaTag(chip, 'fan-chip-media', { autoplay: false, lazy: false })}</div>`;
       }).join('');
 
       const card = document.createElement('div');
@@ -447,7 +480,7 @@
       card.innerHTML = `
         <div class="memory-photo-wrap">
           <div class="photo-fan" aria-hidden="true">${chipsHtml}</div>
-          <div class="memory-photo">${mediaTag(entry.main, 'memory-photo-media', { autoplay: false })}</div>
+          <div class="memory-photo">${mediaTag(entry.main, 'memory-photo-media', { autoplay: false, lazy: false })}</div>
         </div>
         <div class="memory-caption">
           <span class="memory-date">${entry.date}</span>
@@ -472,6 +505,10 @@
           goTo(i);
         }
       });
+
+      if (i === 0) return;
+      deferCardMedia(card);
+      setTimeout(() => activateCardMedia(card), i * 350);
     });
   }
 
@@ -534,6 +571,7 @@
   function goTo(newIndex) {
     if (newIndex < 0 || newIndex >= TIMELINE.length || newIndex === currentIndex) return;
     currentIndex = newIndex;
+    activateCardMedia(memoryTrack.children[newIndex]); // don't wait on the stagger if the visitor gets here first
     renderMemory();
   }
 
