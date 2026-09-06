@@ -647,7 +647,7 @@ img, video {
 .memory-viewport {
   position: relative;
   width: min(980px, 96vw);
-  height: min(560px, 64vh);
+  height: min(480px, 58vh);
   perspective: 1400px;
   touch-action: pan-y;
 }
@@ -664,7 +664,7 @@ img, video {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: min(300px, 62vw);
+  width: min(260px, 54vw);
   aspect-ratio: 0.62;
   background: #fff;
   border-radius: 14px;
@@ -1141,7 +1141,7 @@ img, video {
   .memory-arrow svg { width: 16px; height: 16px; }
   .memory-arrow.prev { left: 0; }
   .memory-arrow.next { right: 0; }
-  .memory-viewport { height: min(380px, 58vh); }
-  .memory-card { width: min(230px, 54vw); }
+  .memory-viewport { height: min(330px, 54vh); }
+  .memory-card { width: min(200px, 48vw); }
   .letter-body { padding: 28px 24px 32px; }
 }

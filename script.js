@@ -144,7 +144,7 @@
   // FAN_SCALE keeps the spread in proportion to .memory-card's width in CSS
   // (300px / the 240px the radius numbers were originally tuned for) so
   // chips still land clear of the main photo and the date underneath it. ----
-  const FAN_SCALE = 300 / 240;
+  const FAN_SCALE = 260 / 240;
 
   function fanPosition(i, n) {
     const radius = (112 + Math.min(n, 8) * 6) * FAN_SCALE;
