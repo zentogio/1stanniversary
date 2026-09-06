@@ -475,37 +475,92 @@ img, video {
   height: 20px;
 }
 
-/* ---------- Mute toggle (persistent, all states) ---------- */
+/* ---------- Music player (persistent, all states, top-right) ---------- */
 
-.icon-btn {
+.music-player {
   position: absolute;
-  top: 24px;
-  right: 24px;
+  top: 20px;
+  right: 20px;
   z-index: 6;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 999px;
   background: rgba(255,255,255,0.92);
   border: 1px solid var(--sky-tint);
   box-shadow: 0 16px 34px -18px rgba(26,26,30,0.45);
+}
+
+.music-btn {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
   color: var(--sky);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: background 0.2s ease;
 }
 
-.icon-btn:hover { transform: scale(1.06); }
+.music-btn:hover { background: var(--card); }
 
-.icon-btn svg {
-  width: 20px;
-  height: 20px;
+.music-btn svg {
+  width: 16px;
+  height: 16px;
 }
 
-.icon-btn .icon-sound-off { display: none; }
-.icon-btn.muted .icon-sound-on { display: none; }
-.icon-btn.muted .icon-sound-off { display: block; }
+.music-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 130px;
+}
+
+.music-title {
+  max-width: 100%;
+  font-family: var(--font-thai);
+  font-size: 12px;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.music-volume {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--sky-tint);
+  accent-color: var(--sky);
+  cursor: pointer;
+}
+
+.music-volume::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--sky);
+  cursor: pointer;
+}
+
+.music-volume::-moz-range-thumb {
+  width: 11px;
+  height: 11px;
+  border: none;
+  border-radius: 50%;
+  background: var(--sky);
+  cursor: pointer;
+}
 
 /* ---------- Memory timeline ---------- */
 
@@ -1001,8 +1056,11 @@ img, video {
   .ticket-barcode-h { width: 130px; height: 34px; }
   .stub-code { font-size: 10px; }
   .brand-logo { width: min(300px, 82vw); }
-  .icon-btn { top: 16px; right: 16px; width: 38px; height: 38px; }
-  .icon-btn svg { width: 17px; height: 17px; }
+  .music-player { top: 14px; right: 14px; padding: 5px 6px; gap: 4px; }
+  .music-info { width: 92px; }
+  .music-title { font-size: 10px; }
+  .music-btn { width: 26px; height: 26px; }
+  .music-btn svg { width: 14px; height: 14px; }
   .memory-arrow { width: 36px; height: 36px; }
   .memory-arrow svg { width: 16px; height: 16px; }
   .memory-arrow.prev { left: 0; }

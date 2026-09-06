@@ -14,6 +14,17 @@
   const TAKEOFF_VIDEO = 'anniversayry/ขั้นของจริง.mp4';
   const LANDING_VIDEO = 'anniversayry/ขาลง.mp4';
 
+  // Background music playlist — cycles to the next track when one ends,
+  // wrapping back to the first after the last. See anniversayry/music/.
+  const PLAYLIST = [
+    { title: 'No One Else — Spicydisc', src: 'anniversayry/music/01.mp3' },
+    { title: 'Honeymoon — Morvasu', src: 'anniversayry/music/02.mp3' },
+    { title: 'Extraordinary — ANATOMY RABBIT', src: 'anniversayry/music/03.mp3' },
+    { title: 'Sunkissed — URWORLD', src: 'anniversayry/music/04.mp3' },
+    { title: 'Everyday — Patrickananda', src: 'anniversayry/music/05.mp3' },
+    { title: 'Her — YENTED', src: 'anniversayry/music/06.mp3' },
+  ];
+
   // Relationship timeline — one entry per gellery/<n> folder. `main` is the
   // large centered photo/clip (same frame size on every card); `chips` are
   // the small fan-out photos/clips — count varies per memory, matching
@@ -181,7 +192,10 @@
   const bgVideo = document.getElementById('bg-video');
 
   const bgMusic = document.getElementById('bg-music');
-  const muteBtn = document.getElementById('mute-btn');
+  const musicTitle = document.getElementById('music-title');
+  const musicVolume = document.getElementById('music-volume');
+  const musicPrevBtn = document.getElementById('music-prev');
+  const musicNextBtn = document.getElementById('music-next');
 
   const screenHero = document.getElementById('screen-hero');
   const brandLogo = document.getElementById('brand-logo');
@@ -214,6 +228,29 @@
   let currentClip = 'takeoff'; // 'takeoff' | 'landing' — tells the ended-handler what comes next
   let currentIndex = 0;
 
+  // ---- Background music playlist: prev/next arrows, a volume slider, and
+  // the current title — cycles forward automatically when a track ends. ----
+  let currentTrack = 0;
+
+  function loadTrack(i, { autoplay }) {
+    currentTrack = (i + PLAYLIST.length) % PLAYLIST.length;
+    const track = PLAYLIST[currentTrack];
+    bgMusic.src = track.src;
+    musicTitle.textContent = track.title;
+    if (autoplay) {
+      bgMusic.play().catch(() => { /* needs a user gesture first — the tear/arrow click satisfies that */ });
+    }
+  }
+
+  bgMusic.addEventListener('ended', () => loadTrack(currentTrack + 1, { autoplay: true }));
+  musicPrevBtn.addEventListener('click', () => loadTrack(currentTrack - 1, { autoplay: true }));
+  musicNextBtn.addEventListener('click', () => loadTrack(currentTrack + 1, { autoplay: true }));
+  musicVolume.addEventListener('input', () => {
+    bgMusic.volume = Number(musicVolume.value);
+  });
+  bgMusic.volume = Number(musicVolume.value);
+  loadTrack(0, { autoplay: false });
+
   function loadClip(src, { loop, autoplay }) {
     bgVideo.loop = loop;
     if (bgVideo.getAttribute('src') !== src) {
@@ -244,7 +281,7 @@
     currentClip = 'takeoff';
     loadClip(TAKEOFF_VIDEO, { loop: false, autoplay: true });
 
-    bgMusic.play().catch(() => { /* file may not be dropped in yet, or blocked — the mute button still reflects intent */ });
+    bgMusic.play().catch(() => { /* autoplay may need a user gesture on some browsers; this click satisfies that */ });
 
     setTimeout(() => {
       screenHero.classList.add('hidden');
@@ -561,11 +598,6 @@
       videos.forEach((v) => v.play().catch(() => {}));
     }
   }
-
-  muteBtn.addEventListener('click', () => {
-    bgMusic.muted = !bgMusic.muted;
-    muteBtn.classList.toggle('muted', bgMusic.muted);
-  });
 
   bgVideo.addEventListener('ended', () => {
     if (currentClip === 'takeoff') {
